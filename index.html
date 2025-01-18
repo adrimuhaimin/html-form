@@ -94,10 +94,11 @@
             const fileInput = document.getElementById('photo');
             const file = fileInput.files[0];
 
-            const laporan = laporanSelect.value;
+            const statusLaporan = laporanSelect.value;
+            const laporanText = document.getElementById('laporan').options[document.getElementById('laporan').selectedIndex].text;
             const followupDate = document.getElementById('followupDate').value;
 
-            if (laporan === 'followup' && !followupDate) {
+            if (statusLaporan === 'followup' && !followupDate) {
                 alert('Silahkan pilih tanggal tindaklanjut');
                 return
             }
@@ -119,7 +120,7 @@
                     name: formData.get('name'),
                     email: formData.get('email'),
                     tujuan: formData.get('tujuan'),
-                    laporan: formData.get('laporan'),
+                    laporan: laporanText,
                     tglFollowup: followupDate,
                     message: formData.get('message'),
                     photo: base64File, // Foto dalam format Base64
