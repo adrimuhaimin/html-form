@@ -31,6 +31,9 @@
         button:hover {
             background-color: #45a049;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -53,9 +56,14 @@
         <label for="laporan">Laporan:</label>
         <select id="laporan" name="laporan" required>
             <option value="" disabled selected>Select Laporan</option>
-            <option value="Butuh tindaklanjut">Butuh Tindaklanjut</option>
-            <option value="Selesai">Selesai</option>
+            <option value="followup">Butuh Tindaklanjut</option>
+            <option value="no_followup">Selesai</option>
         </select>
+
+        <div id="datePickerContainer" class="hidden">
+            <label for="followupDate">Pilih Tanggal:</label>
+            <input type="date" id="followupDate" name="followupDate">
+        </div>
 
         <label for="message">Message:</label>
         <textarea id="message" name="message" required></textarea>
@@ -67,6 +75,17 @@
     </form>
 
     <script>
+        const laporanSelect = document.getElementById('laporan');
+        const datePickerContainer = document.getElementById('datePickerContainer');
+
+        laporanSelect.addEventListener('change', function(){
+            if (this.value === 'followup') {
+                datePickerContainer.classList.remove('hidden');
+            } else{
+                datePickerContainer.classList.add('hidden');
+            }
+        });
+
         document.getElementById('submissionForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -74,6 +93,15 @@
             const formData = new FormData(e.target);
             const fileInput = document.getElementById('photo');
             const file = fileInput.files[0];
+
+            const laporan = laporanSelect.value;
+            const followupDate = document.getElementById('followupDate').value;
+
+            if (laporan === 'followup' && !followupDate) {
+                alert('Silahkan pilih tanggal tindaklanjut');
+                return
+            }
+              
 
             // Jika file tidak ada, hentikan eksekusi
             if (!file) {
@@ -92,6 +120,7 @@
                     email: formData.get('email'),
                     tujuan: formData.get('tujuan'),
                     laporan: formData.get('laporan'),
+                    tglFollowup: followupDate,
                     message: formData.get('message'),
                     photo: base64File, // Foto dalam format Base64
                     fileName: file.name,
