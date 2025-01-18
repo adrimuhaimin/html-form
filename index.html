@@ -13,7 +13,7 @@
             max-width: 400px;
             margin: auto;
         }
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -41,6 +41,21 @@
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
+
+        <label for="tujuan">Tujuan:</label>
+        <select id="tujuan" name="tujuan" required>
+            <option value="" disabled selected>Select Tujuan</option>
+            <option value="Kunjungan">Kunjungan</option>
+            <option value="MoU">MoU</option>
+            <option value="Probing">Probing</option>
+        </select>
+
+        <label for="laporan">Laporan:</label>
+        <select id="laporan" name="laporan" required>
+            <option value="" disabled selected>Select Laporan</option>
+            <option value="Butuh tindaklanjut">Butuh Tindaklanjut</option>
+            <option value="Selesai">Selesai</option>
+        </select>
 
         <label for="message">Message:</label>
         <textarea id="message" name="message" required></textarea>
@@ -75,6 +90,8 @@
                 const data = {
                     name: formData.get('name'),
                     email: formData.get('email'),
+                    tujuan: formData.get('tujuan'),
+                    laporan: formData.get('laporan'),
                     message: formData.get('message'),
                     photo: base64File, // Foto dalam format Base64
                     fileName: file.name,
