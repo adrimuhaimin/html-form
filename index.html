@@ -71,12 +71,17 @@
         <label for="photo">Upload Photo:</label>
         <input type="file" id="photo" name="photo" accept="image/*" required>
 
+        <!-- Tempat untuk preview foto -->
+         <img id="preview" src="#" alt="Preview Photo" style="display: none;">
+
         <button type="submit">Submit</button>
     </form>
 
     <script>
         const laporanSelect = document.getElementById('laporan');
         const datePickerContainer = document.getElementById('datePickerContainer');
+        const photoInput = document.getElementById('photo');
+        const previewImage = document.getElementById('preview');
 
         laporanSelect.addEventListener('change', function(){
             if (this.value === 'followup') {
@@ -86,6 +91,21 @@
             }
         });
 
+        photoInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewImage.src = '#';
+                previewImage.style.display = 'none';
+            }
+        })
+
         document.getElementById('submissionForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -93,10 +113,12 @@
             const formData = new FormData(e.target);
             const fileInput = document.getElementById('photo');
             const file = fileInput.files[0];
-
+            const laporanSelect = document.getElementById('laporan');
             const statusLaporan = laporanSelect.value;
             const laporanText = document.getElementById('laporan').options[document.getElementById('laporan').selectedIndex].text;
             const followupDate = document.getElementById('followupDate').value;
+
+            
 
             if (statusLaporan === 'followup' && !followupDate) {
                 alert('Silahkan pilih tanggal tindaklanjut');
@@ -113,6 +135,8 @@
             // Konversi file ke Base64
             const reader = new FileReader();
             reader.onloadend = async () => {
+                
+
                 const base64File = reader.result.split(',')[1]; // Ambil data Base64 tanpa prefix
 
                 // Tambahkan data file ke objek formData
@@ -136,7 +160,6 @@
                 try {
                     const response = await fetch('https://script.google.com/macros/s/AKfycbww5Xqj_XPH9M9tZ6iRjRyLD7cE6FVn4L40h98XKDlyvFdx0vM1PCShUNJUJhH7S1O9oA/exec', { // Ganti dengan URL Web App
                         method: 'POST',
-                        
                         body: jsonData, // Kirim JSON string
                     });
                     console.log(jsonData);
@@ -145,6 +168,8 @@
                     if (result.status === 'success') {
                         alert('Data submitted successfully!');
                         e.target.reset();
+                        previewImage.style.display = 'none';
+                        
                     } else {
                         alert('Error submitting data.');
                     }
