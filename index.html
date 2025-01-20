@@ -43,38 +43,113 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .option {
+        display: flex;
+        align-items: center;
+        
+        }
+        .option select, .option input[type="text"] {
+        margin-right: 10px;
+        padding: 5px;
+        }
+        .option button {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        }
+        .option button:hover {
+        background-color: #e60000;
+        }
+        #add-option {
+        margin-bottom: 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        }
+        #add-option:hover {
+        background-color: #45a049;
+        }
     </style>
 </head>
 <body>
     <h2>Submit Your Information</h2>
     <form id="submissionForm">
-
+        
+        <!-- manajemen (GM S.D. MUP), working level (ASMAN MULP PAE)-->
         <label for="levelProbing">Level Probing:</label>
-        <input type="text" id="levelProbing" name="levelProbing" required>
+        <select id="levelProbing" name="levelProbing" required>
+            <option value="" disabled selected>Pilih Level Probing</option>
+            <option value="Manajemen (GM, SRM, MUP3)">Manajemen (GM, SRM, MUP3)</option>
+            <option value="Working Level (ASMAN, MULP, PAE)">Working Level (ASMAN, MULP, PAE)</option>
+        </select>
 
-        <label for="tempat">Tempat:</label>
-        <input type="text" id="tempat" name="tempat" required>
+
+        <!-- Google Maps API Script -->
+
+        <!-- Dropdown dari UID, 5 UP3, 34 ULP UNIT ULP -->
+        <!-- LOKASI -->
+        
+        <label for="unit">Unit:</label>
+        <select id="unit" name="unit" required>
+            <option value="" disabled selected>Pilih Unit</option>
+            <option value="UID">Unit Induk Distribusi</option>
+            <option value="UP3 Pekanbaru">UP3 Pekanbaru</option>
+            <option value="UP3 Dumai">UP3 Dumai</option> 
+            <option value="UP3 Tanjungpinang">UP3 Tanjungpinang</option> 
+            <option value="UP3 Rengat">UP3 Rengat</option> 
+            <option value="UP3 Bangkinang">UP3 Bangkinang</option>
+            <option value="ULP Pekanbaru Kota Timur">ULP Pekanbaru Kota Timur</option>
+            <option value="ULP Pekanbaru Kota Barat">ULP Pekanbaru Kota Barat</option>
+            <option value="ULP Simpang Tiga">ULP Simpang Tiga</option>
+            <option value="ULP Rumbai">ULP Rumbai</option>
+            <option value="ULP Panam">ULP Panam</option>
+        </select>
+
+        <label for="lokasi">Lokasi:</label>
+        <input type="text" id="lokasi" name="lokasi" required>
 
         <label for="tglKunjungan">Tanggal Kunjungan:</label>
         <input type="date" id="tglKunjungan" name="tglKunjungan" required>
 
+        <!-- kunjungan - komplain, kunjungan - profiling, selebrasi- Mou, selebrasi - PJBTL, selebrasi - energize  -->
         <label for="tujuan">Tujuan:</label>
         <select id="tujuan" name="tujuan" required>
-            <option value="" disabled selected>Select Tujuan</option>
-            <option value="Kunjungan">Kunjungan</option>
-            <option value="MoU">MoU</option>
-            <option value="Probing">Probing</option>
+            <option value="" disabled selected>Pilih Tujuan</option>
+            <option value="Kunjungan - Komplain">Kunjungan - Komplain</option>
+            <option value="Kunjungan - Profiling">Kunjungan - Profiling</option>
+            <option value="Selebrasi- MoU">Selebrasi- MoU</option>
+            <option value="Selebrasi - PJBTL">Selebrasi - PJBTL</option>
+            <option value="Selebrasi- Energize">Selebrasi- Energize</option>
         </select>
 
+                
         <label for="plg">Peserta Pelanggan:</label>
         <input type="text" id="plg" name="plg" required>
 
         <label for="pln">Peserta PLN:</label>
-        <input type="text" id="pln" name="pln" required>
+        <div id="options-container">
+            <div class="option">
+                <select>
+                <option value="" disabled selected>Pilih Jabatan</option>
+                <option value="MSB">MSB</option>
+                <option value="ASMAN">ASMAN</option>
+                <option value="PAE">PAE</option>
+                </select>
+                <input type="text" placeholder="Nama Peserta">
+                <button type="button" onclick="removeOption(this)">X</button>
+            </div>
+        </div>
+        <button id="add-option" type="button">Add Option</button>
 
-        <label for="isu">Isu utama yang diangkat:</label>
-        <textarea id="isu" name="isu" required></textarea>
-
+        <div id="issue-container">
+            <label for="isu">Isu utama yang diangkat:</label>
+            <textarea id="isu" name="isu" required></textarea>
+        </div>
+        
         <label for="pembahasan">Pembahasan:</label>
         <textarea id="pembahasan" name="pembahasan" required></textarea>
 
@@ -110,6 +185,32 @@
         const datePickerContainer = document.getElementById('datePickerContainer');
         const photoInput = document.getElementById('photo');
         const previewImage = document.getElementById('preview');
+        const optionsContainer = document.getElementById('options-container');
+        const addOptionButton = document.getElementById('add-option');
+
+        function removeOption(button) {
+            button.parentElement.remove();
+        }
+
+        // Fungsi untuk menambahkan opsi baru
+        function addOption() {
+        const newOption = document.createElement('div');
+        newOption.className = 'option';
+        newOption.innerHTML = `
+            <select>
+                <option value="" disabled selected>Pilih Jabatan</option>
+                <option value="msb">MSB</option>
+                <option value="asman">ASMAN</option>
+                <option value="pae">PAE</option>
+            </select>
+            <input type="text" placeholder="Nama Peserta">
+            <button type="button" onclick="removeOption(this)">X</button>
+        `;
+        optionsContainer.appendChild(newOption);
+        }
+
+        // Event listener untuk tombol Add Option
+        addOptionButton.addEventListener('click', addOption);
 
         laporanSelect.addEventListener('change', function(){
             if (this.value === 'followup') {
@@ -167,27 +268,37 @@
                 
 
                 const base64File = reader.result.split(',')[1]; // Ambil data Base64 tanpa prefix
+                const options = document.querySelectorAll("#options-container .option");
+                const pesertaPLN = [];
+                options.forEach(option => {
+                    const jabatan = option.querySelector("select").value; // Ambil nilai dropdown
+                    const namaPeserta = option.querySelector("input[type='text']").value; // Ambil nilai input teks
+                    if (jabatan && namaPeserta) {
+                        pesertaPLN.push(`${jabatan} ${namaPeserta}`);
+                    }
+                });
+                const pesertaPLNString = pesertaPLN.join(', ');
 
                 // Tambahkan data file ke objek formData
                 const data = {
                     levelProbing: formData.get('levelProbing'),
-                    tempat: formData.get('tempat'),
+                    unit: formData.get('unit'),
+                    lokasi: formData.get('lokasi'),
                     tglKunjungan: tglKunjungan,
                     tujuan: formData.get('tujuan'),
                     plg: formData.get('plg'),
-                    pln: formData.get('pln'),
+                    pln: pesertaPLNString,
                     isu: formData.get('isu'),
                     pembahasan: formData.get('pembahasan'),
                     solusi: formData.get('solusi'),
                     rencanaTL: formData.get('rencanaTL'),
                     status: statusText,
                     tglFollowup: followupDate,
-                    message: formData.get('message'),
                     photo: base64File, // Foto dalam format Base64
                     fileName: file.name,
                     mimeType: file.type
                 };
-
+                
                 // Konversi data ke JSON string
                 const jsonData = JSON.stringify(data);
                 console.log("Data sebagai JSON string:", jsonData);
