@@ -48,11 +48,15 @@
 <body>
     <h2>Submit Your Information</h2>
     <form id="submissionForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <label for="levelProbing">Level Probing:</label>
+        <input type="text" id="levelProbing" name="levelProbing" required>
+
+        <label for="tempat">Tempat:</label>
+        <input type="text" id="tempat" name="tempat" required>
+
+        <label for="tglKunjungan">Tanggal Kunjungan:</label>
+        <input type="date" id="tglKunjungan" name="tglKunjungan" required>
 
         <label for="tujuan">Tujuan:</label>
         <select id="tujuan" name="tujuan" required>
@@ -62,8 +66,26 @@
             <option value="Probing">Probing</option>
         </select>
 
-        <label for="laporan">Laporan:</label>
-        <select id="laporan" name="laporan" required>
+        <label for="plg">Peserta Pelanggan:</label>
+        <input type="text" id="plg" name="plg" required>
+
+        <label for="pln">Peserta PLN:</label>
+        <input type="text" id="pln" name="pln" required>
+
+        <label for="isu">Isu utama yang diangkat:</label>
+        <textarea id="isu" name="isu" required></textarea>
+
+        <label for="pembahasan">Pembahasan:</label>
+        <textarea id="pembahasan" name="pembahasan" required></textarea>
+
+        <label for="solusi">Potensi solusi:</label>
+        <textarea id="solusi" name="solusi" required></textarea>
+
+        <label for="rencanaTL">Rencana tindaklanjut:</label>
+        <textarea id="rencanaTL" name="rencanaTL" required></textarea>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
             <option value="" disabled selected>Select Laporan</option>
             <option value="followup">Butuh Tindaklanjut</option>
             <option value="no_followup">Selesai</option>
@@ -73,9 +95,6 @@
             <label for="followupDate">Pilih Tanggal:</label>
             <input type="date" id="followupDate" name="followupDate">
         </div>
-
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea>
 
         <label for="photo">Upload Photo:</label>
         <input type="file" id="photo" name="photo" accept="image/*" required>
@@ -87,7 +106,7 @@
     </form>
 
     <script>
-        const laporanSelect = document.getElementById('laporan');
+        const laporanSelect = document.getElementById('status');
         const datePickerContainer = document.getElementById('datePickerContainer');
         const photoInput = document.getElementById('photo');
         const previewImage = document.getElementById('preview');
@@ -122,9 +141,10 @@
             const formData = new FormData(e.target);
             const fileInput = document.getElementById('photo');
             const file = fileInput.files[0];
-            const laporanSelect = document.getElementById('laporan');
+            const laporanSelect = document.getElementById('status');
             const statusLaporan = laporanSelect.value;
-            const laporanText = document.getElementById('laporan').options[document.getElementById('laporan').selectedIndex].text;
+            const statusText = document.getElementById('status').options[document.getElementById('status').selectedIndex].text;
+            const tglKunjungan = document.getElementById('tglKunjungan').value;
             const followupDate = document.getElementById('followupDate').value;
 
             
@@ -150,10 +170,17 @@
 
                 // Tambahkan data file ke objek formData
                 const data = {
-                    name: formData.get('name'),
-                    email: formData.get('email'),
+                    levelProbing: formData.get('levelProbing'),
+                    tempat: formData.get('tempat'),
+                    tglKunjungan: tglKunjungan,
                     tujuan: formData.get('tujuan'),
-                    laporan: laporanText,
+                    plg: formData.get('plg'),
+                    pln: formData.get('pln'),
+                    isu: formData.get('isu'),
+                    pembahasan: formData.get('pembahasan'),
+                    solusi: formData.get('solusi'),
+                    rencanaTL: formData.get('rencanaTL'),
+                    status: statusText,
                     tglFollowup: followupDate,
                     message: formData.get('message'),
                     photo: base64File, // Foto dalam format Base64
